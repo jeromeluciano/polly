@@ -4,8 +4,6 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
-  const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
-
   return (
     <>
       <Head>
@@ -50,9 +48,7 @@ const Home: NextPage = () => {
             documentation="https://www.prisma.io/docs/"
           />
         </div>
-        <div className="flex items-center justify-center w-full pt-6 text-2xl text-blue-500">
-          {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
-        </div>
+
         <AuthShowcase />
       </main>
     </>
