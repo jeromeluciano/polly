@@ -1,11 +1,20 @@
 import { NextPage } from "next";
-import { useState } from "react";
+import { FormEvent, MouseEventHandler, useState } from "react";
 import { uuid } from "uuidv4";
 import Input from "../../components/input";
 import OptionInput from "../../components/option-input";
 import PrimaryButton from "../../components/primary-button";
+import { trpc } from "../../utils/trpc";
 
 const QuestionPage: NextPage = () => {
+  const mutation = trpc.poll.create.useMutation({
+    onSuccess: (data) => {
+      setQuestion("");
+      setOptions(initialOptionState);
+      setLink(data?.url);
+    },
+  });
+
   const [question, setQuestion] = useState("");
   const initialOptionState = [
     { id: uuid(), name: "" },
@@ -13,6 +22,9 @@ const QuestionPage: NextPage = () => {
   ];
   const [options, setOptions] = useState(initialOptionState);
   const [loading, setLoading] = useState(false);
+  const [copyStatus, setCopyStatus] = useState(false);
+  const [link, setLink] = useState<string | undefined>("");
+
   function add() {
     setOptions([...options, { id: uuid(), name: "" }]);
   }
@@ -23,13 +35,35 @@ const QuestionPage: NextPage = () => {
     );
   }
 
+  async function copyClipboard() {
+    if (window && window !== undefined) {
+      if (link) {
+        await navigator.clipboard.writeText(link);
+        setCopyStatus(true);
+        setTimeout(() => {
+          setCopyStatus(false);
+        }, 3000);
+      }
+    }
+  }
+
+  async function submit(e: FormEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    setLoading(true);
+    await mutation.mutateAsync({
+      question: question,
+      options: options.map((option) => option.name),
+    });
+    setLoading(false);
+  }
+
   return (
     <div className="flex flex-1 items-center justify-center h-[42rem]">
-      <div className=" text-center ">
+      <div className="text-center max-w-xs w-full">
         <h2 className="font-bold text-3xl mb-4">Create a poll?</h2>
-        <form className="flex flex-col gap-y-4">
+        <form className="flex flex-col gap-y-4 ">
           <Input
-            className="px-4"
+            className="px-4 py-2.5"
             placeholder="Question"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
@@ -57,18 +91,17 @@ const QuestionPage: NextPage = () => {
               }
             />
           ))}
-          <PrimaryButton
-            loading={loading}
-            title="SUBMIT"
-            onClick={(e) => {
-              setLoading(true);
-              e.preventDefault();
-              setTimeout(() => {
-                setLoading(false);
-              }, 2500);
-            }}
-          />
+          <PrimaryButton loading={loading} title="SUBMIT" onClick={submit} />
         </form>
+
+        {link ? (
+          <div
+            className="mt-4 border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-3 py-3.5 rounded-lg text-xs overflow-hidden cursor-pointer"
+            onClick={copyClipboard}
+          >
+            {copyStatus ? "Copied!" : link}
+          </div>
+        ) : null}
       </div>
     </div>
   );

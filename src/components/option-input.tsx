@@ -26,13 +26,13 @@ const OptionInput: FC<OptionInputProps> = ({
   return (
     <div className="flex items-center justify-center">
       <Input
-        className="w-full px-4"
+        className="w-full px-4 py-2.5"
         key={option.id}
         placeholder="Option"
         value={option.name}
         onChange={onChange}
       />
-      {index == length ? (
+      {index == length && index + 1 <= 4 ? (
         <button
           className="px-4"
           onClick={(e) => {
