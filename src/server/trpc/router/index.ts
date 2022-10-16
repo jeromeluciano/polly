@@ -3,10 +3,12 @@ import { t } from "../trpc";
 import { exampleRouter } from "./example";
 import { authRouter } from "./auth";
 import { pollRouter } from "./poll";
+import { optionRouter } from "./option";
 
 export const appRouter = t.router({
   auth: authRouter,
   poll: pollRouter,
+  option: optionRouter,
 });
 
 // export type definition of API

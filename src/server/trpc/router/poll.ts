@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { getUrl } from "../../../utils/url";
 import { authedProcedure, t } from "../trpc";
@@ -32,7 +33,7 @@ export const pollRouter = t.router({
   get: t.procedure
     .input(z.object({ pollId: z.string() }))
     .query(async ({ ctx, input: { pollId } }) => {
-      return ctx.prisma.poll.findUnique({
+      return await ctx.prisma.poll.findUnique({
         where: {
           id: pollId,
         },
@@ -40,5 +41,50 @@ export const pollRouter = t.router({
           options: true,
         },
       });
+    }),
+  vote: authedProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+        optionId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userAlreadyVotedToThisPoll = await ctx.prisma.vote.findFirst({
+        where: {
+          voterId: ctx.session.user.id,
+          pollId: input.pollId,
+        },
+      });
+
+      if (userAlreadyVotedToThisPoll) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "User already voted to this poll.",
+        });
+      }
+
+      return await ctx.prisma.vote.create({
+        data: {
+          optionId: input.optionId,
+          pollId: input.pollId,
+          voterId: ctx.session.user.id,
+        },
+      });
+    }),
+  alreadyVoted: authedProcedure
+    .input(
+      z.object({
+        pollId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const voted = await ctx.prisma.vote.findFirst({
+        where: {
+          pollId: input.pollId,
+          voterId: ctx.session.user.id,
+        },
+      });
+      return voted ? true : false;
     }),
 });
