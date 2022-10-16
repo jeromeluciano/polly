@@ -1,5 +1,6 @@
 import { Option } from "@prisma/client";
 import { trpc } from "../utils/trpc";
+import PuffLoading from "./puff-loading";
 
 interface OptionButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -19,7 +20,7 @@ const OptionButton: React.FC<OptionButtonProps> = ({
   mouseOnSubmitButton,
   alreadyVoted,
 }) => {
-  const { data: statistics } = trpc.option.statistics.useQuery({
+  const { data: statistics, isLoading } = trpc.option.statistics.useQuery({
     optionId: option.id,
     pollId: option.pollId,
   });
@@ -33,6 +34,16 @@ const OptionButton: React.FC<OptionButtonProps> = ({
       return 0;
     }
     return (optionVoteCount / totalPollVoterCount) * 100;
+  }
+
+  if (isLoading) {
+    return (
+      <>
+        <button className="border bg border-gray-800  px-6 w-full mx-auto py-5 rounded-lg space-y-2 text-center">
+          <PuffLoading />
+        </button>
+      </>
+    );
   }
 
   return (

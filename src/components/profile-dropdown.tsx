@@ -16,14 +16,15 @@ const ProfileDropdown = () => {
         onClick={() => toggle(!isOpen)}
         onBlur={() => toggle(false)}
       >
-        <Image
-          alt="Profile Image"
-          src={session?.user?.image ?? "https://via.placeholder.com/38"}
-          width="38"
-          height="38"
-          className="rounded-lg border"
-        />
-
+        {session ? (
+          <Image
+            alt="Profile Image"
+            src={session?.user?.image as string}
+            width="38"
+            height="38"
+            className="rounded-lg border"
+          />
+        ) : null}
         <h2 className="text-sm font-bold">{session?.user?.name}</h2>
       </button>
       {isOpen || mouseOnDropdown ? (

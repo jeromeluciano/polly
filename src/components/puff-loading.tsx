@@ -1,7 +1,7 @@
 const PuffLoading = () => {
   return (
     <svg
-      className="w-16 h-16"
+      className="w-16 h-16 mx-auto"
       viewBox="0 0 44 44"
       xmlns="http://www.w3.org/2000/svg"
       stroke="#fff"
