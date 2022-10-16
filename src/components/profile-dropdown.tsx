@@ -3,11 +3,21 @@ import { useState } from "react";
 import { TbLogout } from "react-icons/tb";
 import { BsPersonFill } from "react-icons/bs";
 import { signOut, useSession } from "next-auth/react";
+import PuffLoading from "./puff-loading";
+import ThreeDotsLoader from "./three-dots-loader";
 
 const ProfileDropdown = () => {
   const [isOpen, toggle] = useState(false);
   const [mouseOnDropdown, setMouseOnDropdown] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (status == "loading") {
+    return (
+      <div>
+        <ThreeDotsLoader />
+      </div>
+    );
+  }
 
   return (
     <div className="relative space-y-5">
