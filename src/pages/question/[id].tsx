@@ -4,12 +4,13 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import OptionButton from "../../components/option-button";
 import PrimaryButton from "../../components/primary-button";
+import PuffLoading from "../../components/puff-loading";
 import { trpc } from "../../utils/trpc";
 
 const PollVotingPage: NextPage = () => {
   const { query } = useRouter();
 
-  const { data: poll } = trpc.poll.get.useQuery(
+  const { data: poll, isLoading: pollLoading } = trpc.poll.get.useQuery(
     {
       pollId: query.id as string,
     },
@@ -18,18 +19,24 @@ const PollVotingPage: NextPage = () => {
     }
   );
 
-  const { data: alreadyVoted } = trpc.poll.alreadyVoted.useQuery(
-    {
-      pollId: query.id as string,
-    },
-    {
-      enabled: query.id != undefined,
-    }
-  );
+  const { data: alreadyVoted, isLoading: alreadyVotedLoading } =
+    trpc.poll.alreadyVoted.useQuery(
+      {
+        pollId: query.id as string,
+      },
+      {
+        enabled: query.id != undefined,
+      }
+    );
+
+  const utils = trpc.useContext();
 
   const mutation = trpc.poll.vote.useMutation({
     onSuccess: () => {
       setOptionSelected(null);
+      // invalidate all options query
+      utils.option.statistics.invalidate();
+      utils.poll.alreadyVoted.invalidate();
     },
     onError: (error) => {
       console.log(error.message);
@@ -54,7 +61,14 @@ const PollVotingPage: NextPage = () => {
     }
   }
 
-  console.log(poll?.options);
+  if (alreadyVotedLoading || pollLoading) {
+    return (
+      <div className="flex justify-center items-center h-[calc(100vh-14rem)]">
+        <PuffLoading />
+      </div>
+    );
+  }
+
   return (
     <div className="flex justify-center h-[calc(100vh-10rem)] items-center flex-grow">
       <div className="mx-auto ">

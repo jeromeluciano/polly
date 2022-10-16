@@ -29,6 +29,9 @@ const OptionButton: React.FC<OptionButtonProps> = ({
     optionVoteCount: number,
     totalPollVoterCount: number
   ) {
+    if (totalPollVoterCount == 0) {
+      return 0;
+    }
     return (optionVoteCount / totalPollVoterCount) * 100;
   }
 
@@ -53,7 +56,8 @@ const OptionButton: React.FC<OptionButtonProps> = ({
                 statistics?.optionVoteCount as number,
                 statistics?.totalPollVoterCount as number
               )}
-              %
+              % ({statistics?.optionVoteCount} /{" "}
+              {statistics?.totalPollVoterCount})
             </div>
           </div>
           <div className="mb-4 h-4 bg-gray-200 rounded-full dark:bg-gray-700">
