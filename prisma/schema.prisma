@@ -3,16 +3,19 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["interactiveTransactions"]
+  previewFeatures = ["referentialIntegrity", "interactiveTransactions"]
+  
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
   // Further reading: 
   // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
   // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
   url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
 
 // Necessary for Next auth
@@ -22,12 +25,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? // @db.Text
-  access_token      String? // @db.Text
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? // @db.Text
+  id_token          String?  @db.Text
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -64,10 +67,10 @@ model VerificationToken {
 
 model Poll {
   id        String   @id @default(cuid())
-  question  String
+  question  String  @db.VarChar(255)
   options   Option[]
   votes     Vote[]
-  creatorId String
+  creatorId String  @db.Text
   creator   User     @relation(fields: [creatorId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -75,8 +78,8 @@ model Poll {
 
 model Option {
   id        String   @id @default(cuid())
-  name      String
-  pollId    String
+  name      String  @db.VarChar(255)
+  pollId    String  @db.Text
   poll      Poll     @relation(fields: [pollId], references: [id])
   votes     Vote[]
   createdAt DateTime @default(now())
@@ -84,10 +87,10 @@ model Option {
 
 model Vote {
   id       String @id @default(cuid())
-  pollId   String
+  pollId   String @db.Text
   poll     Poll   @relation(fields: [pollId], references: [id])
-  optionId String
+  optionId String @db.Text
   option   Option @relation(fields: [optionId], references: [id])
-  voterId  String
+  voterId  String @db.Text
   voter    User   @relation(fields: [voterId], references: [id])
 }
