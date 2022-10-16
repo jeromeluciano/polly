@@ -25,7 +25,7 @@ const Navbar = () => {
                 loading={loading}
                 onClick={() => {
                   setLoading(true);
-                  signIn("github");
+                  signIn("google");
                   setLoading(false);
                 }}
               />
