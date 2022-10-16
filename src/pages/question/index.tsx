@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { FormEvent, MouseEventHandler, useState } from "react";
+import { FormEvent, useState } from "react";
 import { uuid } from "uuidv4";
 import Input from "../../components/input";
 import OptionInput from "../../components/option-input";
