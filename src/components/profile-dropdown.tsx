@@ -35,7 +35,9 @@ const ProfileDropdown = () => {
             className="rounded-lg border"
           />
         ) : null}
-        <h2 className="text-sm font-bold">{session?.user?.name}</h2>
+        <h2 className="text-sm font-bold hidden md:block">
+          {session?.user?.name}
+        </h2>
       </button>
       {isOpen || mouseOnDropdown ? (
         <div
@@ -48,6 +50,10 @@ const ProfileDropdown = () => {
             setMouseOnDropdown(false);
           }}
         >
+          <div className="flex items-center space-x-3 md:hidden lg:hidden">
+            <BsPersonFill className="w-4 h-4" />
+            <p>{session?.user?.name}</p>
+          </div>
           <div className="flex items-center space-x-3">
             <BsPersonFill className="w-4 h-4" />
             <p>ljohnjerome@gmail.com</p>

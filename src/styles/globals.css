@@ -1,5 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@400;500;700;900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles:wght@400;700&family=Open+Sans:wght@400;500;700;800&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -13,6 +12,9 @@
 
 @layer base {
   html {
+    font-family: "Open Sans";
+  }
+  .logo {
     font-family: "Fuzzy Bubbles";
   }
 }

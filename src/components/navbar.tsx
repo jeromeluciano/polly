@@ -8,19 +8,25 @@ import ProfileDropdown from "./profile-dropdown";
 const Navbar = () => {
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
+
   return (
     <div className="flex py-6 md:py-8 md:px-12 lg:px-8 px-8 items-center space-x-12">
-      <h1 className="text-2xl text-blue-600 font-bold">POLLY</h1>
+      <h1 className="text-2xl text-blue-600 font-bold logo">POLLY</h1>
       <div className="flex flex-1 space-x-12 justify-between items-center">
-        <div className="flex flex-1  space-x-6">
-          <LinkItem link="/question" linkTitle="Questions" />
-          <LinkItem link="/my-polls" linkTitle="My polls" />
-        </div>
+        {status == "authenticated" ? (
+          <div className="flex flex-1  space-x-6">
+            <LinkItem link="/question" linkTitle="Questions" />
+            <LinkItem link="/my-polls" linkTitle="My polls" />
+          </div>
+        ) : (
+          <div></div>
+        )}
+
         <div className="flex space-x-4">
           <div>
             {!session && status == "unauthenticated" ? (
               <PrimaryButton
-                title="Login"
+                title="Login with Google"
                 className="px-6 text-sm"
                 loading={loading}
                 onClick={() => {

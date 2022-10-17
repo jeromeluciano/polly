@@ -1,12 +1,15 @@
 import { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import { FormEvent, useState } from "react";
 import { uuid } from "uuidv4";
 import Input from "../../components/input";
+import Layout from "../../components/layout";
 import OptionInput from "../../components/option-input";
 import PrimaryButton from "../../components/primary-button";
 import { trpc } from "../../utils/trpc";
 
 const QuestionPage: NextPage = () => {
+  useSession({ required: true });
   const mutation = trpc.poll.create.useMutation({
     onSuccess: (data) => {
       setQuestion("");
@@ -58,52 +61,54 @@ const QuestionPage: NextPage = () => {
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center h-[42rem]">
-      <div className="text-center max-w-xs w-full">
-        <h2 className="font-bold text-3xl mb-4">Create a poll?</h2>
-        <form className="flex flex-col gap-y-4 ">
-          <Input
-            className="px-4 py-2.5"
-            placeholder="Question"
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-          />
-          {options.map((option, index) => (
-            <OptionInput
-              add={add}
-              remove={remove}
-              length={options.length}
-              index={index + 1}
-              key={option.id}
-              option={option}
-              onChange={(e) =>
-                setOptions((current) =>
-                  current.map((_option) => {
-                    if (option.id == _option.id) {
-                      return {
-                        ..._option,
-                        name: e.target.value,
-                      };
-                    }
-                    return _option;
-                  })
-                )
-              }
+    <Layout>
+      <div className="flex flex-1 items-center justify-center h-[42rem]">
+        <div className="text-center max-w-xs w-full">
+          <h2 className="font-bold text-3xl mb-4">Create a poll?</h2>
+          <form className="flex flex-col gap-y-4 ">
+            <Input
+              className="px-4 py-2.5"
+              placeholder="Question"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
             />
-          ))}
-          <PrimaryButton loading={loading} title="SUBMIT" onClick={submit} />
-        </form>
+            {options.map((option, index) => (
+              <OptionInput
+                add={add}
+                remove={remove}
+                length={options.length}
+                index={index + 1}
+                key={option.id}
+                option={option}
+                onChange={(e) =>
+                  setOptions((current) =>
+                    current.map((_option) => {
+                      if (option.id == _option.id) {
+                        return {
+                          ..._option,
+                          name: e.target.value,
+                        };
+                      }
+                      return _option;
+                    })
+                  )
+                }
+              />
+            ))}
+            <PrimaryButton loading={loading} title="SUBMIT" onClick={submit} />
+          </form>
 
-        {link ? (
-          <div
-            className="mt-4 border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-3 py-3.5 rounded-lg text-xs overflow-hidden cursor-pointer"
-            onClick={copyClipboard}
-          >
-            {copyStatus ? "Copied!" : link}
-          </div>
-        ) : null}
+          {link ? (
+            <div
+              className="mt-4 border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-3 py-3.5 rounded-lg text-xs overflow-hidden cursor-pointer"
+              onClick={copyClipboard}
+            >
+              {copyStatus ? "Copied!" : link}
+            </div>
+          ) : null}
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

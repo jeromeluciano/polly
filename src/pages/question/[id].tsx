@@ -2,6 +2,7 @@ import { Option } from "@prisma/client";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import Layout from "../../components/layout";
 import OptionButton from "../../components/option-button";
 import PrimaryButton from "../../components/primary-button";
 import PuffLoading from "../../components/puff-loading";
@@ -63,49 +64,53 @@ const PollVotingPage: NextPage = () => {
 
   if (alreadyVotedLoading || pollLoading) {
     return (
-      <div className="flex justify-center items-center h-[calc(100vh-14rem)]">
-        <PuffLoading />
-      </div>
+      <Layout>
+        <div className="flex justify-center items-center h-[calc(100vh-14rem)]">
+          <PuffLoading />
+        </div>
+      </Layout>
     );
   }
 
   return (
-    <div className="flex justify-center h-[calc(100vh-10rem)] items-center flex-grow">
-      <div className="mx-auto ">
-        <h1 className="font-bold text-2xl md:text-4xl lg:text-4xl mb-8">
-          {poll?.question}
-        </h1>
-        <div className="px-8 max-w-lg mx-auto flex flex-col space-y-4">
-          {poll?.options.map((option, index) => {
-            return (
-              <OptionButton
-                option={option}
-                key={option.id}
-                index={index}
-                optionSelectFn={updateSelectedOption}
-                mouseOnSubmitButton={mouseOnSubmitButton}
-                selected={
-                  optionSelected !== null && option.id == optionSelected.id
-                }
-                alreadyVoted={alreadyVoted}
+    <Layout>
+      <div className="flex justify-center h-[calc(100vh-10rem)] items-center flex-grow">
+        <div className="mx-auto ">
+          <h1 className="font-bold text-2xl md:text-4xl lg:text-4xl mb-8">
+            {poll?.question}
+          </h1>
+          <div className="px-8 max-w-lg mx-auto flex flex-col space-y-4">
+            {poll?.options.map((option, index) => {
+              return (
+                <OptionButton
+                  option={option}
+                  key={option.id}
+                  index={index}
+                  optionSelectFn={updateSelectedOption}
+                  mouseOnSubmitButton={mouseOnSubmitButton}
+                  selected={
+                    optionSelected !== null && option.id == optionSelected.id
+                  }
+                  alreadyVoted={alreadyVoted}
+                />
+              );
+            })}
+            {!alreadyVoted ? (
+              <PrimaryButton
+                title="Vote"
+                loading={false}
+                className="rounded-lg"
+                disabled={!optionSelected ? true : false}
+                onMouseEnter={() => setMouseOnSubmitButton(true)}
+                onMouseLeave={() => setMouseOnSubmitButton(false)}
+                onClick={voteSubmit}
               />
-            );
-          })}
-          {!alreadyVoted ? (
-            <PrimaryButton
-              title="Vote"
-              loading={false}
-              className="rounded-lg"
-              disabled={!optionSelected ? true : false}
-              onMouseEnter={() => setMouseOnSubmitButton(true)}
-              onMouseLeave={() => setMouseOnSubmitButton(false)}
-              onClick={voteSubmit}
-            />
-          ) : null}
+            ) : null}
+          </div>
+          <div className="w-full mx-auto text-center "></div>
         </div>
-        <div className="w-full mx-auto text-center "></div>
       </div>
-    </div>
+    </Layout>
   );
 };
 
