@@ -1,5 +1,7 @@
+import { Poll } from "@prisma/client";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { uuid } from "uuidv4";
 import Input from "../../components/input";
@@ -10,11 +12,12 @@ import { trpc } from "../../utils/trpc";
 
 const QuestionPage: NextPage = () => {
   useSession({ required: true });
+
   const mutation = trpc.poll.create.useMutation({
     onSuccess: (data) => {
       setQuestion("");
       setOptions(initialOptionState);
-      setLink(data?.url);
+      setLink({ poll: data?.poll, url: data?.url });
     },
   });
 
@@ -25,8 +28,9 @@ const QuestionPage: NextPage = () => {
   ];
   const [options, setOptions] = useState(initialOptionState);
   const [loading, setLoading] = useState(false);
-  const [copyStatus, setCopyStatus] = useState(false);
-  const [link, setLink] = useState<string | undefined>("");
+  const [link, setLink] = useState<{ poll: Poll; url: string } | undefined>(
+    undefined
+  );
 
   function add() {
     setOptions([...options, { id: uuid(), name: "" }]);
@@ -36,18 +40,6 @@ const QuestionPage: NextPage = () => {
     setOptions((current) =>
       current.filter((_option) => option.id !== _option.id)
     );
-  }
-
-  async function copyClipboard() {
-    if (window && window !== undefined) {
-      if (link) {
-        await navigator.clipboard.writeText(link);
-        setCopyStatus(true);
-        setTimeout(() => {
-          setCopyStatus(false);
-        }, 3000);
-      }
-    }
   }
 
   async function submit(e: FormEvent<HTMLButtonElement>) {
@@ -99,12 +91,11 @@ const QuestionPage: NextPage = () => {
           </form>
 
           {link ? (
-            <div
-              className="mt-4 border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-3 py-3.5 rounded-lg text-xs overflow-hidden cursor-pointer"
-              onClick={copyClipboard}
-            >
-              {copyStatus ? "Copied!" : link}
-            </div>
+            <Link href={`/question/${link.poll.id}`}>
+              <div className="mt-4 border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-3 py-3.5 rounded-lg text-xs overflow-hidden cursor-pointer">
+                {link.url}
+              </div>
+            </Link>
           ) : null}
         </div>
       </div>
