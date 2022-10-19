@@ -33,7 +33,7 @@ const MobileNavigation = () => {
                   Question
                 </a>
               </Link>
-              <Link href="/my-polls">
+              <Link href="/">
                 <a className="text-gray-200 text-sm py-4 px-6 hover:bg-zinc-800">
                   My polls
                 </a>

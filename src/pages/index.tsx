@@ -5,10 +5,11 @@ import PollItem from "../components/poll-item";
 import { BsPlusLg } from "react-icons/bs";
 import Link from "next/link";
 import { trpc } from "../utils/trpc";
+import PuffLoading from "../components/puff-loading";
 
 const MyPollPage: NextPage = () => {
-  const { data: polls } = trpc.poll.getMyPolls.useQuery();
-  console.log("polls", polls);
+  const { data: polls, isLoading } = trpc.poll.getMyPolls.useQuery();
+
   return (
     <>
       <Head>
@@ -36,7 +37,7 @@ const LinkAddButton = () => {
     <Link href="/question">
       <button
         aria-label="Poll Item Button"
-        className="border border-zinc-800 rounded-lg flex justify-center items-center"
+        className="bg-zinc-900 border border-zinc-800 hover:bg-zinc-700 active:bg-zinc-800 hover:text-gray-300 active:text-gray-200 rounded-md space-y-4 p-4 flex flex-col justify-center items-center"
       >
         <BsPlusLg className="w-7 h-7 text-gray-200" />
       </button>
