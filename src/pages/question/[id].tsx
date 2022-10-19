@@ -104,7 +104,9 @@ const PollVotingPage: NextPage = () => {
                   />
                 );
               })}
-              {!alreadyVoted && status == "authenticated" ? (
+              {alreadyVoted ||
+              status == "unauthenticated" ||
+              alreadyVotedLoading ? null : (
                 <PrimaryButton
                   title="Vote"
                   loading={loading}
@@ -114,7 +116,7 @@ const PollVotingPage: NextPage = () => {
                   onMouseLeave={() => setMouseOnSubmitButton(false)}
                   onClick={voteSubmit}
                 />
-              ) : null}
+              )}
             </div>
             <div className="w-full mx-auto text-center "></div>
           </div>

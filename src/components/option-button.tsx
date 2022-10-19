@@ -39,7 +39,7 @@ const OptionButton: React.FC<OptionButtonProps> = ({
   if (isLoading) {
     return (
       <>
-        <button className="border bg border-gray-800  px-6 w-full mx-auto py-5 rounded-lg space-y-2 text-center">
+        <button className="border bg border-zinc-800  px-6 w-full mx-auto py-5 rounded-lg space-y-2 text-center">
           <PuffLoading />
         </button>
       </>
