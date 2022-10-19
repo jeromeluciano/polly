@@ -16,7 +16,7 @@ const PrimaryButton: FC<ButtonProps> = ({ title, loading, ...pageProps }) => {
         {...rest}
         disabled={loading || disabled}
         className={
-          "bg-blue-500 py-2.5 w-full rounded-lg shadow-md font-bold text-center " +
+          "bg-pink-500 py-2.5 w-full rounded-lg shadow-md font-bold text-center " +
           className
         }
       >
@@ -30,7 +30,7 @@ const PrimaryButton: FC<ButtonProps> = ({ title, loading, ...pageProps }) => {
       {...rest}
       disabled={loading || disabled}
       className={
-        "bg-blue-600 hover:bg-blue-700 active:bg-blue-800 py-2.5 w-full rounded-lg shadow-md font-bold text-center " +
+        "bg-pink-600 hover:bg-pink-700 active:bg-pink-800 py-2.5 w-full rounded-lg shadow-md font-bold text-center " +
         className
       }
     >

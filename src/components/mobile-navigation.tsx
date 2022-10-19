@@ -26,15 +26,15 @@ const MobileNavigation = () => {
                 toggle(false);
                 setMouseOnDropdown(false);
               }}
-              className="absolute right-0 flex flex-col bg-gray-900 border border-gray-700 text-left  w-[15rem] rounded-lg"
+              className="absolute right-0 flex flex-col bg-zinc-900 border border-zinc-800 text-left  w-[15rem] rounded-lg"
             >
               <Link href="/question">
-                <a className="text-gray-200 text-sm py-4 px-6 hover:bg-gray-800">
+                <a className="text-gray-200 text-sm py-4 px-6 hover:bg-zinc-800">
                   Question
                 </a>
               </Link>
               <Link href="/my-polls">
-                <a className="text-gray-200 text-sm py-4 px-6 hover:bg-gray-800">
+                <a className="text-gray-200 text-sm py-4 px-6 hover:bg-zinc-800">
                   My polls
                 </a>
               </Link>

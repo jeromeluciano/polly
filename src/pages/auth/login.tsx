@@ -3,6 +3,7 @@ import { signIn } from "next-auth/react";
 import Head from "next/head";
 
 import { FcGoogle } from "react-icons/fc";
+import { BsGoogle } from "react-icons/bs";
 
 const LoginPage: NextPage = () => {
   return (
@@ -22,9 +23,9 @@ const LoginPage: NextPage = () => {
         <div className="max-w-5xl">
           <div className="text-center">
             <h1 className="font-extrabold leading-[1.2em] text-5xl md:text-7xl z-40 text-white hero-title shadow">
-              Create a <span className="text-blue-600">poll</span> instantly.
+              Create a <span className="text-pink-600">poll</span> instantly.
             </h1>
-            <h1 className="font-bold text-sm px-6 mt-6 mb-6 hero-title z-40 leading-12  text-gray-200  md:text-xl  md:leading-8">
+            <h1 className="font-bold text-sm px-6 mt-6 mb-6 hero-title z-40 leading-12  text-gray-300  md:text-lg  md:leading-8">
               Want to ask your friends where they should go on Friday night or
               set up a meeting with coworkers? Create a poll and get results
               quickly.
@@ -36,9 +37,9 @@ const LoginPage: NextPage = () => {
                   callbackUrl: "/",
                 })
               }
-              className="flex items-center justify-center w-3/6 md:w-1/5 space-x-2 bg-white text-gray-700 py-2.5  mx-auto rounded-lg font-bold hover:bg-gray-300 hover:text-gray-900 active:bg-gray-200 active:text-black text-sm tracking-wide"
+              className="flex items-center justify-center w-3/6 md:w-1/5 space-x-2 bg-pink-600 text-white py-2.5  mx-auto rounded-lg font-bold hover:bg-pink-700 hover:text-gray-200 active:bg-pink-800 active:text-gray-100 text-sm tracking-wide"
             >
-              <FcGoogle className="w-6 h-6" />
+              <BsGoogle className="w-6 h-6" />
               <div>Signin with Google</div>
             </button>
           </div>

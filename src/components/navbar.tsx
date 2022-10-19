@@ -11,12 +11,12 @@ const Navbar = () => {
 
   return (
     <div className="flex py-6 md:py-8 md:px-12 lg:px-8 px-8 items-center space-x-12">
-      <h1 className="text-2xl text-blue-600 font-bold logo">POLLY</h1>
+      <h1 className="text-2xl text-pink-500 font-bold logo">POLLY</h1>
       <div className="flex flex-1 space-x-12 justify-between items-center">
         {status == "authenticated" ? (
           <div className="flex flex-1  space-x-6">
+            <LinkItem link="/" linkTitle="My polls" />
             <LinkItem link="/question" linkTitle="Questions" />
-            <LinkItem link="/my-polls" linkTitle="My polls" />
           </div>
         ) : (
           <div></div>

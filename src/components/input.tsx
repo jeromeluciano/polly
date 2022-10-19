@@ -7,7 +7,7 @@ const Input: FC<InputHTMLAttributes<HTMLInputElement>> = ({ ...pageProps }) => {
       {...rest}
       type="text"
       className={
-        "py-2 border border-gray-700 bg-gray-900 text-white rounded-lg px-2 " +
+        "py-2 border border-zinc-800 bg-zinc-900 text-white rounded-lg text-base px-2 " +
         className
       }
     />
