@@ -50,7 +50,7 @@ const OptionButton: React.FC<OptionButtonProps> = ({
     <>
       {selected ? (
         <button
-          className="border bg border-gray-800 bg-gray-800 px-6 w-full py-5 rounded-lg space-y-2"
+          className="border bg border-pink-600 bg-zinc-900 px-6 w-full py-5 rounded-lg space-y-2"
           onClick={() => optionSelectFn(option)}
           onBlur={() => {
             if (!mouseOnSubmitButton) {
@@ -59,7 +59,7 @@ const OptionButton: React.FC<OptionButtonProps> = ({
           }}
         >
           <div className="flex justify-between">
-            <div className="text-left text-md font-medium dark:text-white">
+            <div className="text-left text-md font-medium text-pink-600">
               {option.name}
             </div>
             <div>
@@ -86,7 +86,7 @@ const OptionButton: React.FC<OptionButtonProps> = ({
         </button>
       ) : (
         <button
-          className={`border border-gray-800 px-6 w-full py-5 rounded-lg space-y-2 ${
+          className={`border border-zinc-800 px-6 w-full py-5 rounded-lg space-y-2 ${
             alreadyVoted ? "cursor-default" : "cursor-pointer"
           }`}
           onClick={() => optionSelectFn(option)}

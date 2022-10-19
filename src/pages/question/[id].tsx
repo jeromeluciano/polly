@@ -1,5 +1,6 @@
 import { Option } from "@prisma/client";
 import { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -10,14 +11,20 @@ import PuffLoading from "../../components/puff-loading";
 import { trpc } from "../../utils/trpc";
 
 const PollVotingPage: NextPage = () => {
+  const [optionSelected, setOptionSelected] = useState<Option | null>(null);
+  const [mouseOnSubmitButton, setMouseOnSubmitButton] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const { status } = useSession();
   const { query } = useRouter();
+  const utils = trpc.useContext();
 
   const { data: poll, isLoading: pollLoading } = trpc.poll.get.useQuery(
     {
       pollId: query.id as string,
     },
     {
-      enabled: query.id != undefined,
+      enabled: !!query.id,
     }
   );
 
@@ -27,11 +34,9 @@ const PollVotingPage: NextPage = () => {
         pollId: query.id as string,
       },
       {
-        enabled: query.id != undefined,
+        enabled: !!query.id && status == "authenticated",
       }
     );
-
-  const utils = trpc.useContext();
 
   const mutation = trpc.poll.vote.useMutation({
     onSuccess: () => {
@@ -45,9 +50,6 @@ const PollVotingPage: NextPage = () => {
     },
   });
 
-  const [optionSelected, setOptionSelected] = useState<Option | null>(null);
-  const [mouseOnSubmitButton, setMouseOnSubmitButton] = useState(false);
-  const [loading, setLoading] = useState(false);
   async function voteSubmit() {
     if (optionSelected) {
       setLoading(true);
@@ -65,7 +67,7 @@ const PollVotingPage: NextPage = () => {
     }
   }
 
-  if (alreadyVotedLoading || pollLoading) {
+  if (status == "loading") {
     return (
       <Layout>
         <div className="flex justify-center items-center h-[calc(100vh-14rem)]">
@@ -82,11 +84,11 @@ const PollVotingPage: NextPage = () => {
       </Head>
       <Layout>
         <div className="flex justify-center h-[calc(100vh-10rem)] items-center flex-grow">
-          <div className="mx-auto  w-full px-8 md:max-w-md">
+          <div className="mx-auto  w-full px-8 md:max-w-4xl">
             <h1 className=" text-center font-bold text-2xl md:text-4xl lg:text-4xl mb-4">
               {poll?.question}
             </h1>
-            <div className="md:max-w-2xl w-full mx-auto flex flex-col space-y-4">
+            <div className="md:max-w-md w-full mx-auto flex flex-col space-y-4">
               {poll?.options.map((option, index) => {
                 return (
                   <OptionButton
@@ -102,7 +104,7 @@ const PollVotingPage: NextPage = () => {
                   />
                 );
               })}
-              {!alreadyVoted ? (
+              {!alreadyVoted && status == "authenticated" ? (
                 <PrimaryButton
                   title="Vote"
                   loading={loading}

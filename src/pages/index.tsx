@@ -4,8 +4,11 @@ import Layout from "../components/layout";
 import PollItem from "../components/poll-item";
 import { BsPlusLg } from "react-icons/bs";
 import Link from "next/link";
+import { trpc } from "../utils/trpc";
 
 const MyPollPage: NextPage = () => {
+  const { data: polls } = trpc.poll.getMyPolls.useQuery();
+  console.log("polls", polls);
   return (
     <>
       <Head>
@@ -16,10 +19,10 @@ const MyPollPage: NextPage = () => {
           <div className="mb-5">
             <h1 className="font-bold">My Polls</h1>
           </div>
-          <ul className="grid grid-cols-1  auto-rows-[180px] md:auto-rows-[150px] md:grid-cols-3 gap-5">
-            <PollItem />
-            <PollItem />
-            <PollItem />
+          <ul className="grid grid-cols-1  auto-rows-[180px] md:auto-rows-[150px] md:grid-cols-3 gap-5 mb-8">
+            {polls?.map((poll) => (
+              <PollItem key={poll.id} poll={poll} />
+            ))}
             <LinkAddButton />
           </ul>
         </div>
@@ -31,7 +34,10 @@ const MyPollPage: NextPage = () => {
 const LinkAddButton = () => {
   return (
     <Link href="/question">
-      <button className="border border-zinc-800 rounded-lg flex justify-center items-center">
+      <button
+        aria-label="Poll Item Button"
+        className="border border-zinc-800 rounded-lg flex justify-center items-center"
+      >
         <BsPlusLg className="w-7 h-7 text-gray-200" />
       </button>
     </Link>

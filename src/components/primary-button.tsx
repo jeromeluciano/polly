@@ -16,7 +16,7 @@ const PrimaryButton: FC<ButtonProps> = ({ title, loading, ...pageProps }) => {
         {...rest}
         disabled={loading || disabled}
         className={
-          "bg-pink-500 py-2.5 w-full rounded-lg shadow-md font-bold text-center " +
+          "bg-pink-400 py-2.5 w-full rounded-lg shadow-md font-bold text-center " +
           className
         }
       >

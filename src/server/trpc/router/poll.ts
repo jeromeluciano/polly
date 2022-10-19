@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { TbRulerOff } from "react-icons/tb";
 import { z } from "zod";
 import { getUrl } from "../../../utils/url";
 import { authedProcedure, t } from "../trpc";
@@ -33,7 +34,7 @@ export const pollRouter = t.router({
   get: t.procedure
     .input(z.object({ pollId: z.string() }))
     .query(async ({ ctx, input: { pollId } }) => {
-      return await ctx.prisma.poll.findUnique({
+      return await ctx.prisma.poll.findFirst({
         where: {
           id: pollId,
         },
@@ -87,4 +88,19 @@ export const pollRouter = t.router({
       });
       return voted ? true : false;
     }),
+  getMyPolls: authedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.poll.findMany({
+      where: {
+        creatorId: ctx.session.user.id,
+      },
+      include: {
+        _count: {
+          select: {
+            options: true,
+            votes: true,
+          },
+        },
+      },
+    });
+  }),
 });

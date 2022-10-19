@@ -13,6 +13,10 @@
 @layer base {
   html {
     font-family: "Open Sans";
+    /* height: 100%; */
+  }
+  body {
+    /* @apply min-h-full flex flex-col; */
   }
   .logo {
     font-family: "Fuzzy Bubbles";
