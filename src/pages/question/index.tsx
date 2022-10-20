@@ -146,7 +146,7 @@ const QuestionPage: NextPage = () => {
 
             {link ? (
               <Link href={`/question/${link.poll.id}`}>
-                <div className="mt-4 border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-3 py-3.5 rounded-lg text-xs overflow-hidden cursor-pointer">
+                <div className="mt-4 border border-pink-700 text-gray-200 hover:bg-pink-600 hover:text-white px-3 py-3.5 rounded-lg text-xs overflow-hidden cursor-pointer">
                   {link.url}
                 </div>
               </Link>
