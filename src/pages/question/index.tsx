@@ -4,7 +4,7 @@ import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 import { uuid } from "uuidv4";
 import Input from "../../components/input";
 import Layout from "../../components/layout";
@@ -22,9 +22,11 @@ const QuestionPage: NextPage = () => {
   });
 
   const [question, setQuestion] = useState("");
+  const [questionError, setQuestionError] = useState(false);
+  // const [errors, setErrors] = useState(0);
   const initialOptionState = [
-    { id: uuid(), name: "" },
-    { id: uuid(), name: "" },
+    { id: uuid(), name: "", error: false },
+    { id: uuid(), name: "", error: false },
   ];
   const [options, setOptions] = useState(initialOptionState);
   const [loading, setLoading] = useState(false);
@@ -33,7 +35,7 @@ const QuestionPage: NextPage = () => {
   );
 
   function add() {
-    setOptions([...options, { id: uuid(), name: "" }]);
+    setOptions([...options, { id: uuid(), name: "", error: false }]);
   }
 
   function remove(option: { id: string; name: string }) {
@@ -42,15 +44,57 @@ const QuestionPage: NextPage = () => {
     );
   }
 
-  async function submit(e: FormEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    setLoading(true);
-    await mutation.mutateAsync({
-      question: question,
-      options: options.map((option) => option.name),
+  const validateOptions = useCallback(() => {
+    const validated = options.map((option) => {
+      if (option.name.length == 0) {
+        return {
+          ...option,
+          error: true,
+        };
+      }
+      return { ...option, error: false };
     });
-    setLoading(false);
-  }
+    setOptions(validated);
+
+    return validated;
+  }, [options]);
+
+  const validateQuestion = useCallback((question: string) => {
+    if (question.length == 0) {
+      setQuestionError(true);
+      return "failed";
+    }
+    setQuestionError(false);
+    return "success";
+  }, []);
+
+  const submit = useCallback(
+    async function submit(e: FormEvent<HTMLButtonElement>) {
+      e.preventDefault();
+      setLoading(true);
+      let errors = 0;
+      // validate first before submit
+      // all added input must be required
+
+      const validatedOption = validateOptions();
+      const validatedQuestion = validateQuestion(question);
+
+      validatedOption.forEach((option) => {
+        if (option.error) {
+          errors += 1;
+        }
+      });
+
+      if (errors == 0 && validatedQuestion == "success") {
+        await mutation.mutateAsync({
+          question: question,
+          options: options.map((option) => option.name),
+        });
+      }
+      setLoading(false);
+    },
+    [mutation, options, question, validateOptions, validateQuestion]
+  );
 
   return (
     <>
@@ -63,7 +107,9 @@ const QuestionPage: NextPage = () => {
             <h2 className="font-bold text-3xl mb-4">Create a poll?</h2>
             <form className="flex flex-col gap-y-4 ">
               <Input
-                className="px-4 py-2.5"
+                className={`px-4 py-2.5 ${
+                  questionError ? "border-red-600" : "border-zinc-800"
+                }`}
                 placeholder="Question"
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
