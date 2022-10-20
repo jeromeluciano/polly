@@ -1,4 +1,4 @@
-# Polly: A website that allows you create a poll instantly
+# Polly: A website that allows you to create a poll instantly
 
 ## Technologies I used to build this project
 
